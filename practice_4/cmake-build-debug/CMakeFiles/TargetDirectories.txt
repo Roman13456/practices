@@ -1,0 +1,3 @@
+/cygdrive/g/Practicums/practices/practice_4/cmake-build-debug/CMakeFiles/practice_4.dir
+/cygdrive/g/Practicums/practices/practice_4/cmake-build-debug/CMakeFiles/edit_cache.dir
+/cygdrive/g/Practicums/practices/practice_4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
