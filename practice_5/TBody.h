@@ -12,6 +12,8 @@
 class TBody{
 public:
     string name = "фігура";
+    virtual double calc_surface_area() = 0;
+    virtual double calc_volume() = 0;
     double getSurface_area(){
         return surface_area;
     };
