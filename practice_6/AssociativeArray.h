@@ -52,6 +52,7 @@ public:
 
     void addPair(const Key& key, const Value& value) {
         int index = hash(key);
+        cout << "Adding pair with key " << key << " at index " << index << endl;
 
         Node<Key, Value>* newNode = new Node<Key, Value>(key, value);
         if (table[index] == nullptr) {
@@ -62,6 +63,7 @@ public:
             table[index] = newNode;
         }
     }
+
 
     Pair<Key, Value> findMaxPair() {
         Pair<Key, Value> maxPair;
@@ -101,7 +103,9 @@ public:
         Node<Key, Value>* current; // Current node within the current cell
 
     public:
-        Iterator(Node<Key, Value>** tbl, int size) : table(tbl), tableSize(size), currentCell(0), current(nullptr) {}
+        Iterator(Node<Key, Value>** tbl, int size) : table(tbl), tableSize(size), currentCell(0), current(nullptr) {
+            current = table[0];
+        }
 
         void reset() {
             currentCell = 0;
@@ -113,7 +117,12 @@ public:
         }
 
         Node<Key, Value>* getValue() {
-            return current;
+            if(current== nullptr && currentCell==0){
+                return table[0];
+            }else{
+                return current;
+            }
+
         }
 
         void next() {

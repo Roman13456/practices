@@ -23,17 +23,17 @@ using namespace std;
 void app(){
     int option;
     int boolean;
-    int arrLength=4;
-    int arrLen;
+    int arrLength;
+//    int arrLen;
     cout<<"Введіть розмір ассоціативного масиву:"<<endl;
-    cin>>arrLen;
-    arrLength+=arrLen;
+    cin>>arrLength;
+//    arrLength+=arrLen;
     AssociativeArray<int, std::string> array(arrLength);
     AssociativeArray<int, std::string>::Iterator iterator = array.begin();
-    array.addPair(1, "One");
-    array.addPair(5, "Five");
-    array.addPair(3, "Three");
-    array.addPair(7, "Seven");
+//    array.addPair(1, "One");
+//    array.addPair(5, "Five");
+//    array.addPair(3, "Three");
+//    array.addPair(7, "Seven");
     printf("1 - add pair instance\n");
     printf("2 - find the biggest key value\n");
     printf("3 - clear the Associative Array\n");
@@ -56,10 +56,11 @@ void app(){
         } while (!boolean);
         switch (option) {
             case 1: {
-                double key;
+                int key;
                 string value;
                 cout<<"Enter the key"<<endl;
                 cin>>key;
+                cin.ignore();
                 cout<<"Enter the value"<<endl;
                 getline(cin, value);
                 array.addPair(key, value);
@@ -97,12 +98,16 @@ void app(){
                 break;
             }
             case 7: {
-                iterator.next();
-                Node<int , std::string>* x = iterator.getValue();
-                if (x != nullptr) {
-                    cout << "Current Pair: key = " << x->key << ", Value = " << x->value << endl;
+                if(iterator.atEnd()){
+                    cout<<"The end of the array is reached"<<endl;
                 } else {
-                    cout << "Iterator is pointing to nullptr" << endl;
+                    iterator.next();
+                    Node<int, std::string> *x = iterator.getValue();
+                    if (x != nullptr) {
+                        cout << "Current Pair: key = " << x->key << ", Value = " << x->value << endl;
+                    } else {
+                        cout << "Iterator is pointing to nullptr" << endl;
+                    }
                 }
                 break;
             }
