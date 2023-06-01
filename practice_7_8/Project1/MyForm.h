@@ -254,12 +254,14 @@ namespace Project1 {
 
 		}
 #pragma endregion
+
+		
 	private:
 		int trigger0 = 1;
 		int trigger1 = 1;
 		array<System::String^>^ days;
-		int idx0;
-		int idx1;
+		int id0;
+		int id1;
 		int length = 0;
 		array<Date^>^ arr = gcnew array<Date^>(length);
 		void label_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -272,29 +274,40 @@ namespace Project1 {
 				if (trigger0) {
 					this->date_1->Text = e->getDay()+"."+e->getMonth()+"."+e->getYear() + ".";
 					trigger0 = 0;
-					idx0 = index;
+					id0 = e->getId();
 				}else if (trigger1) {
 					this->date_2->Text = e->getDay() + "." + e->getMonth() + "." + e->getYear() + ".";
 					trigger1 = 0;
-					idx1 = index;
+					id1 = e->getId();
 				}
 				else {
 					MessageBox::Show("Обидві поля для дат порівняння заповнені, звільніть одне з них", "помилка");
 				}
 			}
-			std::cout << "ddd";
+			std::cout << "id0:"<<id0<<std::endl;
+			std::cout << "id1:" << id1<<std::endl;
 		}
 		void btn_Click(System::Object^ sender, System::EventArgs^ e) {
+
 			Button^ clickedBtn = dynamic_cast<Button^>(sender);
 			if (clickedBtn != nullptr) {
 				Panel^ panel = dynamic_cast<Panel^>(clickedBtn->Parent);
 				int index = flowLayoutPanel->Controls->IndexOf(panel);
+				if (arr[index]->getId() == id0) {
+					this->date_1->Text = "дата 1";
+					trigger0 = 1;
+				}
+				if (arr[index]->getId() == id1) {
+					this->date_2->Text = "дата 2";
+					trigger1 = 1;
+				}
 				if (panel != nullptr) {
 					Control^ parentControl = panel->Parent;
 					if (parentControl != nullptr) {
 						parentControl->Controls->Remove(panel);
 						length--;
 						array<Date^>^ arr_temp = gcnew array<Date^>(length);
+
 						int counter = 0;
 						for (int i = 0; i < length+1; i++) {
 							if (i != index) {
@@ -310,13 +323,12 @@ namespace Project1 {
 		}
 		
 	private: System::Void newton_1_btn_Click(System::Object^ sender, System::EventArgs^ e) {
-		bool isDouble = 1;
-		System::Globalization::CultureInfo^ culture = gcnew System::Globalization::CultureInfo("en-US"); // Встановлюємо локалізацію на англійську (з десятковою крапкою)
+		bool isInteger = 1;
 		int day,month, year;
-		isDouble = System::Int32::TryParse(this->day->Text, System::Globalization::NumberStyles::Float, culture, day) ? isDouble : 0;
-		isDouble = System::Int32::TryParse(this->month->Text, System::Globalization::NumberStyles::Float, culture, month) ? isDouble : 0;
-		isDouble = System::Int32::TryParse(this->year->Text, System::Globalization::NumberStyles::Float, culture, year) ? isDouble : 0;
-		if (isDouble) {
+		isInteger = System::Int32::TryParse(this->day->Text, day) ? isInteger : 0;
+		isInteger = System::Int32::TryParse(this->month->Text, month) ? isInteger : 0;
+		isInteger = System::Int32::TryParse(this->year->Text, year) ? isInteger : 0;
+		if (isInteger) {
 			Label^ label = gcnew Label();
 			label->Padding = System::Windows::Forms::Padding(0, 5, 0, 0);
 			Panel^ panel = gcnew Panel();
@@ -330,13 +342,13 @@ namespace Project1 {
 			btn->Dock = DockStyle::Right;
 			panel->Height = 25;
 			try {
-				Date date1(day, month, year);
+				Date^ date1 = gcnew Date(day, month, year);
 				length++;
 				array<Date^>^ arr_temp = gcnew array<Date^>(length);
 				for (int i = 0; i < length-1; i++) {
 					arr_temp[i] = arr[i];
 				}
-				arr_temp[length - 1] = gcnew Date(day, month, year);
+				arr_temp[length - 1] = date1;
 				arr = arr_temp;
 				label->Text = day + " число, " + month + " місяць, " + year + " рік.";
 				label->Click += gcnew System::EventHandler(this, &MyForm::label_Click);
@@ -375,11 +387,23 @@ namespace Project1 {
 	}
 	private: System::Void compare_dates_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (!trigger0 && !trigger1) {
-			if (arr[idx0]->getDayOfWeek() == arr[idx1]->getDayOfWeek()) {
-				result->Text = "Обидві дати відповідають одному дню тижня.("+days[arr[idx0]->getDayOfWeek()-1]+")";
+			Date^ e0;
+			Date^ e1;
+			for (int i = 0; i < length; i++) {
+				if (id0 == arr[i]->getId()) {
+					e0 = arr[i];
+				}
+			}
+			for (int i = 0; i < length; i++) {
+				if (id1 == arr[i]->getId()) {
+					e1 = arr[i];
+				}
+			}
+			if (e0->getDayOfWeek() == e1->getDayOfWeek()) {
+				result->Text = "Обидві дати відповідають одному дню тижня.("+days[e0->getDayOfWeek() -1]+")";
 			}
 			else {
-				result->Text = "Дати відповідають різним дням тижня.(" + days[arr[idx0]->getDayOfWeek()-1]+" та "+days[arr[idx1]->getDayOfWeek()-1]+")";
+				result->Text = "Дати відповідають різним дням тижня.(" + days[e0->getDayOfWeek() -1]+" та "+days[e1->getDayOfWeek() -1]+")";
 			}
 		}
 		else {

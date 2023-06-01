@@ -31,6 +31,8 @@ private:
     int day;
     int month;
     int year;
+    static int counter=0;
+    int id;
 
 public:
     int getDay() {
@@ -41,6 +43,9 @@ public:
     }
     int getYear() {
         return year;
+    }
+    int getId() {
+        return id;
     }
     Date(int d, int m, int y) : day(d), month(m), year(y) {
         if ((m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) && (d > 31)) {
@@ -58,6 +63,9 @@ public:
         else if (m < 1 || m>12) {
             throw gcnew System::ArgumentOutOfRangeException("Місяців лише 12");
         }
+        id = counter;
+        counter++;
+        //std::cout << "id" << id<<std::endl;
     }
     Date(){}
     void display() {
